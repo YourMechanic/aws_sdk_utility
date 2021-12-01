@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'aws_sdk_utility'
+require 'webmock/rspec'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

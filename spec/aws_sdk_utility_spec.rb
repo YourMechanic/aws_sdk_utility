@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
+require 'aws-sdk'
+require 'aws_sdk_utility'
+
+# rubocop:disable Metrics/BlockLength
+
 RSpec.describe AwsSdkUtility do
+  let(:s3_bucket) { AwsSdkUtility.s3_bucket = 'test.yourmechanic.com' }
+  before(:each) do
+    AWS.config(access_key_id: 'some_key',
+               secret_access_key: 'some_secret',
+               region: 'us-west-2')
+    AwsSdkUtility.s3_bucket = 'some-bucket'
+    AwsSdkUtility.amazon_key = 'amazon_key'
+    AwsSdkUtility.amazon_access_key = 'amazon_access_key'
+  end
+
   it 'has a version number' do
     expect(AwsSdkUtility::VERSION).not_to be nil
   end
@@ -14,7 +29,8 @@ RSpec.describe AwsSdkUtility do
 
   describe '.bucket' do
     it 'returns a bucket' do
-      expect(AwsSdkUtility.bucket('some_bucket_name')).to be
+      puts AwsSdkUtility.bucket
+      expect(AwsSdkUtility.bucket).to be
     end
   end
 
@@ -25,4 +41,69 @@ RSpec.describe AwsSdkUtility do
       expect(AwsSdkUtility.cdn).to be
     end
   end
+
+  # write test store file on s3_store_file
+  describe '.s3_store_file' do
+    it 'returns a s3file url' do
+      stub_request(:head, /.*amazonaws.com.*/)
+        .to_return(status: 200, body: '', headers: {})
+      stub_request(:any, /.*amazonaws.com.*/)
+        .with(
+          body: 'hello'
+        ).to_return(status: 200, body: '', headers: {})
+      allow(AwsSdkUtility).to receive(:doomsday).and_return('Mon, 18 Jan 2038 00:00:00 PST -08:00')
+      expect(AwsSdkUtility.s3_store_file('test', File.open('spec/fixtures/test_file.txt'))).to be
+    end
+  end
+
+  describe '.s3_download_file' do
+    it 'downloads a file form s3' do
+      stub_request(:get, /.*amazonaws.com.*/)
+        .to_return(body: File.open('spec/fixtures/test_file.txt'))
+      expect(AwsSdkUtility.s3_download_file('test', File.open('spec/fixtures/test_file.txt'))).to be nil
+    end
+  end
+
+  describe '.s3_download_large_file' do
+    it 'downloads a large file form s3' do
+      stub_request(:get, /.*amazonaws.com.*/)
+        .to_return(body: File.open('spec/fixtures/test_file.txt'))
+      expect(AwsSdkUtility.s3_download_large_file('test',
+                                                  File.open('spec/fixtures/test_file.txt'),
+                                                  bucket: 'test.yourmechanic.com')).to be nil
+    end
+  end
+
+  describe '.s3_copy' do
+    it 'copies file from one bucket to another' do
+      stub_request(:head, /.*amazonaws.com.*/)
+        .to_return(status: 200, body: '', headers: {})
+      stub_request(:put, /.*amazonaws.com.*/)
+        .to_return(status: 200, body: '', headers: {})
+      expect(AwsSdkUtility.s3_copy('test', {}, 'test2', {})).to be
+    end
+  end
+
+  describe '.s3_delete' do
+    it 'returns a delete a s3 file' do
+      stub_request(:head, /.*amazonaws.com.*/)
+        .to_return(status: 200, body: '', headers: {})
+      stub_request(:delete, /.*amazonaws.com.*/)
+        .to_return(status: 200, body: '', headers: {})
+      expect(AwsSdkUtility.s3_delete('test')).to be nil
+    end
+  end
+
+  describe '.s3_get_object' do
+    it 'returns a get a s3 object' do
+      stub_request(:head, /.*amazonaws.com.*/)
+        .to_return(status: 200, body: '', headers: {})
+      stub_request(:get, /.*amazonaws.com.*/)
+        .to_return(status: 200, body: 'hello', headers: {})
+
+      expect(AwsSdkUtility.s3_get_object('test').read).to be 'hello'
+    end
+  end
 end
+
+# rubocop:enable Metrics/BlockLength
