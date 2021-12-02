@@ -52,10 +52,10 @@ module AwsSdkUtility
   end
 
   def config
-    AWS.config(access_key_id: amazon_access_key,
-               secret_access_key: amazon_key,
-               region: region)
-    AWS.config(s3_endpoint: s3_endpoint)
+    AWS.config(access_key_id: AwsSdkUtility.amazon_key,
+               secret_access_key: AwsSdkUtility.amazon_access_key,
+               region: AwsSdkUtility.region)
+    AWS.config(s3_endpoint: AwsSdkUtility.s3_endpoint)
   end
 
   def s3_endpoint

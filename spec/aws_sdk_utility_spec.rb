@@ -45,10 +45,6 @@ RSpec.describe AwsSdkUtility do
     it 'returns a s3file url' do
       stub_request(:head, 'https://s3.amazonaws.com/some_bucket/test')
         .to_return(status: 200, body: '', headers: {})
-      # stub_request(:put, "https://s3.amazonaws.com/some_bucket/test")
-      #   .with(
-      #     body: 'hello'
-      #   ).to_return(status: 200, body: '', headers: {})
       stub_request(:put, 'https://s3.amazonaws.com/some_bucket/test')
         .to_return(status: 200, body: '', headers: {})
       allow(AwsSdkUtility).to receive(:doomsday).and_return('Mon, 18 Jan 2038 00:00:00 PST -08:00')
