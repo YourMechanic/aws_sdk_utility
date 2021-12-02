@@ -57,15 +57,15 @@ module AwsSdkUtility
                region: AwsSdkUtility.region)
   end
 
-  # def s3_endpoint
-  #   @s3_endpoint
-  # end
+  def s3_endpoint
+    @s3_endpoint
+  end
 
-  # def s3_endpoint=(value)
-  #   @s3_endpoint = value
-  #   AWS.config(s3_endpoint: value)
-  #   @s3_endpoint
-  # end
+  def s3_endpoint=(value)
+    @s3_endpoint = value
+    AWS.config(s3_endpoint: value)
+    @s3_endpoint
+  end
 
   def bucket(bucket = s3_bucket)
     @bucket = AWS::S3.new.buckets[bucket]
