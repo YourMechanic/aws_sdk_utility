@@ -26,6 +26,14 @@ module AwsSdkUtility
     @s3_image = value
   end
 
+  def s3_services_image
+    @s3_services_image
+  end
+
+  def s3_services_image=(value)
+    @s3_services_image = value
+  end
+
   def amazon_key
     @amazon_key
   end
