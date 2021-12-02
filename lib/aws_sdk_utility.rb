@@ -55,19 +55,19 @@ module AwsSdkUtility
     AWS.config(access_key_id: AwsSdkUtility.amazon_key,
                secret_access_key: AwsSdkUtility.amazon_access_key,
                region: AwsSdkUtility.region)
-    AWS.config(s3_endpoint: AwsSdkUtility.s3_endpoint)
   end
 
-  def s3_endpoint
-    @s3_endpoint
-  end
+  # def s3_endpoint
+  #   @s3_endpoint
+  # end
 
-  def s3_endpoint=(value)
-    @s3_endpoint = value
-  end
+  # def s3_endpoint=(value)
+  #   @s3_endpoint = value
+  #   AWS.config(s3_endpoint: value)
+  #   @s3_endpoint
+  # end
 
   def bucket(bucket = s3_bucket)
-    config
     @bucket = AWS::S3.new.buckets[bucket]
   end
 
