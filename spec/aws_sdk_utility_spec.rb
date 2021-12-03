@@ -12,6 +12,8 @@ RSpec.describe AwsSdkUtility do
     AwsSdkUtility.amazon_key = 'amazon_key'
     AwsSdkUtility.amazon_access_key = 'amazon_access_key'
     AwsSdkUtility.s3_endpoint = 's3.amazonaws.com'
+    stub_request(:get, %r[latest/meta-data/iam/security-credentials/.*]).
+      to_return(status: 200, body: "", headers: {}
   end
 
   it 'has a version number' do
